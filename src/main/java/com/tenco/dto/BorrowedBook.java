@@ -1,18 +1,21 @@
 package com.tenco.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Borrow {
+@AllArgsConstructor
+@Builder
+public class BorrowedBook {
     private int id;
-    private int bookId;
-    private int studentId;
+    private String title;
+    private String author;
+    private String publisher;
+    private int publicationYear;
     private LocalDate borrowDate;
-    private LocalDate returnDate;
 }
