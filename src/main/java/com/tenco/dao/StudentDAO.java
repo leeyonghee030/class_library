@@ -13,7 +13,7 @@ import java.util.List;
 public class StudentDAO {
     //TODO - 추후 사용하는 측 확인해서 라턴 타입결정
     // 학생 등록 기능
-    private int addStudent(Student student) {
+    public int addStudent(Student student) {
         int rows =0;
         String sql = """
                 insert into students (name, student_id) 

@@ -15,7 +15,7 @@ import java.util.List;
 public class BorrowDAO {
     // 현 대출중인 도서 목록 조회 join해서 도서 이름까지 출력
 
-    public List<Borrow> getBorrowedBooks() {
+    public List<Borrow> getBorrowedBooks() throws SQLException{
         List<Borrow> borrowList = new ArrayList<>();
         String sql = """
                 select b.id, b.book_id, bk.title, b.student_id, s.name, b.borrow_date, b.return_date
@@ -236,8 +236,9 @@ public class BorrowDAO {
 //    4. books 테이블에 available 을 true로 변경
 //    5. 2-4번까지 모두 성공하면 coommit 하나라도 실패시 rollback 처리
 //    6. 자동 커밋을 원래대로 되돌리고 연결을 닫는다
-    public  void returnBook (int bookId, int studentId)  {
+    public  int returnBook (int bookId, int studentId)  {
         Connection conn =null;
+        int bookRow;
 
         try { conn = DatabaseUtil.getConnection();
               conn.setAutoCommit(false);
@@ -250,7 +251,7 @@ public class BorrowDAO {
                 checkPstmt.setInt(2,studentId);
                 try (ResultSet checkRs = checkPstmt.executeQuery()) {
                     if (!checkRs.next()) {
-                        throw new SQLException("대출한 도서가 확인도지않습니다 BookId : " + bookId);
+                        throw new SQLException("대출한 도서가 확인되지않습니다 BookId : " + bookId);
                     }
                 }
             }
@@ -274,7 +275,7 @@ public class BorrowDAO {
                     """;
             try (PreparedStatement bookPstmt = conn.prepareStatement(bookSql)) {
                 bookPstmt.setInt(1,bookId);
-                int bookRow = bookPstmt.executeUpdate();
+                bookRow = bookPstmt.executeUpdate();
                 if (bookRow < 1) {
                     throw new SQLException("책 반납 가능 수정중 오류 발생했습니다");
                 }
@@ -300,5 +301,6 @@ public class BorrowDAO {
 
             }
         }
+        return bookRow;
     }
 }
