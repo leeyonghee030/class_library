@@ -137,7 +137,7 @@ public class BorrowDAO {
                     """;
             try (PreparedStatement updatepstmt = conn.prepareStatement(updateSql)) {
                 updatepstmt.setInt(1,bookId);
-                updatepstmt.executeUpdate();
+                rows =updatepstmt.executeUpdate();
             }
             // 여기 까지 몯 성공했다면 확정
             conn.commit();

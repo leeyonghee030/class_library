@@ -1,5 +1,6 @@
 package com.tenco;
 
+import com.tenco.util.DatabaseUtil;
 import com.tenco.view.LibraryView;
 import com.tenco.view.LibraryView2;
 
@@ -12,6 +13,4 @@ public class Main {
         LibraryView libraryView = new LibraryView();
         libraryView.start();
     }
-
-
 }

@@ -64,7 +64,7 @@ public class BookDAO {
                 pstmt.setString(3,book.getPublisher());
                 pstmt.setInt(4,book.getPublicationYear());
                 pstmt.setString(5, book.getIsbn());
-                pstmt.setBoolean(6,book.isAvailable());
+                pstmt.setBoolean(6,true);
 
                 rows = pstmt.executeUpdate();
 

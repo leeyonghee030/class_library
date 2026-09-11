@@ -4,9 +4,11 @@ package com.tenco.service;
 // 호출의 흐름
 // View 사용자의 입력 -> service 규칙검사 -> DB 요청과 응답
 
+import com.tenco.dao.AdminDAO;
 import com.tenco.dao.BookDAO;
 import com.tenco.dao.BorrowDAO;
 import com.tenco.dao.StudentDAO;
+import com.tenco.dto.Admin;
 import com.tenco.dto.Book;
 import com.tenco.dto.Borrow;
 import com.tenco.dto.Student;
@@ -23,6 +25,7 @@ public class LibraryService {
     private  final  BookDAO bookDAO = new BookDAO();
     private  final BorrowDAO borrowDAO = new BorrowDAO();
     private  final StudentDAO studentDAO = new StudentDAO();
+    private  final AdminDAO adminDAO = new AdminDAO();
 
     // 도서 추가기능
     // 1. 제목 , 저자가 비어 있는지 확인 둘중 하나라도없으면 중단
@@ -86,7 +89,7 @@ public class LibraryService {
     // 1.도서 아이디랑 ,학생 아이디가 1이상인지 검사 (auto increment는 1부터시작)
     //  2.통과하면 dao 에 트랙젠셕 에위임한다
     // 3. 사실 뷰단에서 먼저 로그인 여부를 확인하고 수행할수있도록 처리가 된다.
-    public int borrowBook(int bookId, int studentId) throws SQLException {
+    public int borrowBook(int bookId, int studentId) throws Exception {
         if ( bookId <= 0 || studentId <= 0) {
             throw  new SQLException("유효한 도서 ID와 유효한 학생 ID를 입력해주세요");
         }
@@ -94,19 +97,37 @@ public class LibraryService {
     }
 
     //8. 대출중인 도서 조회
-    public  List<Borrow> getBorrowedBook () throws SQLException {
+    public  List<Borrow> getBorrowedBook () throws Exception {
         return borrowDAO.getBorrowedBooks();
     }
     //.9 도서 반납 기능
     // 도서 번호, 학생 번호
-    public int returnBook(int bookId, int studentId) throws SQLException {
+    public int returnBook(int bookId, int studentId) throws Exception {
         if (bookId <= 0 || studentId <= 0) {
             throw  new SQLException("유효한 도서 ID 와 유효한 학생 ID를 입력해주세요");
         }
         return borrowDAO.returnBook(bookId,studentId);
     }
 
+    // 관리자 로그인 (id 와 비밀번호)
+  //1. 아이디와 비밀번호가 비어있는지 검사
+    //2. DAO에게 해당 아이디에 관리자 정보를 찾는다 (없으면 null)
+    // 3. 사용자가 입력한 비밀번호와 DB에 저장된 비밀번호를 비교한다
+    // 4. 일치하면 비밀번호를 지운 Admin 객체를 반환 아니면 null을 반환
+    public Admin authenticateAdmin(String admin_id, String password) throws SQLException {
+        if (admin_id == null || admin_id.trim().isEmpty() ||
+            password ==null || password.trim().isEmpty()) {
+            throw new SQLException("관리자 ID와 비밀번호를 입력해주세요");
+        }
+        Admin admin = adminDAO.findByAdminId(admin_id);
 
+        if (!password.equals(admin.getPassword())) {
+            return null;
+        }
+        // 4. 인증이 끝난 객체에 비밀번호를 남겨둘 이유가없으모 지우고 돌려준다
+        admin.setPassword(null);
+            return admin;
+    }
 
 
 

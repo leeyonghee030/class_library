@@ -175,9 +175,19 @@ public class LibraryView2 {
                 System.out.println("제목과 저자는 필수 입력입니다");
                 continue;
             }
+            System.out.println("추가할 책의 출판사를 입력해주세요");
+            System.out.print("입력 : ");
+            String publisher = scanner.nextLine();
+            if (publisher.equals("0")) return;
+
+            if (publisher.trim().isEmpty()) {
+                System.out.println("출판사는 필수 입력입니다.");
+                continue;
+            }
             Book book = new Book();
             book.setTitle(title);
             book.setAuthor(author);
+            book.setPublisher(publisher);
             try {
                 libraryService.addBook(book);
                 System.out.println(title + "을 등록하였습니다");
@@ -288,6 +298,10 @@ public class LibraryView2 {
                 System.out.println("일시적인 오류로 책 대출을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
                 System.out.println("[디버그] " + e.getMessage());
                 continue;
+            } catch (Exception e) {
+                System.out.println("일시적인 오류로 책 대출을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
+                System.out.println("[디버그] " + e.getMessage());
+                continue;
             }
         }
         }
@@ -303,6 +317,9 @@ public class LibraryView2 {
                     System.out.println(borrow);
                 }
             } catch (SQLException e) {
+                System.out.println("일시적인 오류로 대출 목록 조회을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
+                System.out.println("[디버그] " + e.getMessage());
+            } catch (Exception e) {
                 System.out.println("일시적인 오류로 대출 목록 조회을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
                 System.out.println("[디버그] " + e.getMessage());
             }
@@ -354,6 +371,9 @@ public class LibraryView2 {
                     System.out.println("일시적인 오류로 반납을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
                     System.out.println("[디버그] " + e.getMessage());
                     continue;
+                } catch (Exception e) {
+                    System.out.println("일시적인 오류로 반납을 처리하지 못했습니다. 잠시 후 다시 시도해주세요");
+                    System.out.println("[디버그] " + e.getMessage());
                 }
 
             }
