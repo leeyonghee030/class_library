@@ -119,7 +119,7 @@ public class LibraryView {
     // 관리자가 아니면 안내 문구를 출력하고 flese를 반환
     // 반복 적인 부분이라서 메서드 추출
         private boolean requireAdmin(String menuName) {
-            if (isAdminLoggedIn()) {
+            if (!isAdminLoggedIn()) {
                 System.out.println("관리자만 " + menuName + "을 할수있습니다");
                 System.out.println("먼저 관리자 로그인해주세요. (메뉴 12번)");
                 return false;

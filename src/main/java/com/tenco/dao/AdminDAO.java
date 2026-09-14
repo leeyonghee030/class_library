@@ -1,6 +1,7 @@
 package com.tenco.dao;
 
 
+import com.tenco.Main;
 import com.tenco.dto.Admin;
 import com.tenco.util.DatabaseUtil;
 
@@ -38,4 +39,34 @@ public class AdminDAO {
         }
         return null;
     }
+
+
+    // 관리자 등록기능 추가
+    public void addAdmin(Admin admin) throws SQLException {
+        String sql = """
+                insert into admins(admin_id, password, name)
+                values (?,?,?)
+                """;
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setString(1,admin.getAdminId());
+            pstmt.setString(2,admin.getPassword());
+            pstmt.setString(3,admin.getName());
+
+           int row = pstmt.executeUpdate();
+        }
+
+    }
+
+    public static void main(String[] args) throws SQLException {
+        AdminDAO adminDAO = new AdminDAO();
+        Admin admin = Admin.builder()
+                .adminId("admin5")
+                .name("티모관리자")
+                .password("123")
+                .build();
+
+        adminDAO.addAdmin(admin);
+    }
+
 }
